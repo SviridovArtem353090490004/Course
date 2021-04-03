@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Dock cargo unpacking",
+  "description": "Json for emulating dock workload",
+  "type": "object",
+  "properties": {
+    "arrivingDate": {
+      "description": "Date of arriving cargo",
+      "type": "string"
+    },
+    "name": {
+      "description": "Name of the cargo",
+      "type": "string"
+    },
+    "cargoType": {
+      "description": "Type of cargo (liquid, dry, container)",
+      "type": "string"
+    },
+    "weight" : {
+      "description": "Weight/amount of cargo (in kg or pcs)",
+      "type": "integer"
+    },
+    "waitingDays": {
+      "description": "Needed days for unpack",
+      "type": "integer"
+    },
+    "capacityLiquidKgPerDay": {
+      "description": "Capacity of liquid crane",
+      "type": "integer"
+    },
+    "capacityDryKgPerDay": {
+      "description": "Capacity of dry crane",
+      "type": "integer"
+    },
+    "capacityContainerUnitPerDay": {
+      "description": "Capacity of container crane",
+      "type": "integer"
+    },
+    "countOfLiquidCrane": {
+      "description": "Count of liquid crane",
+      "type": "integer",
+      "default": 1
+    },
+    "countOfContainerCrane": {
+      "description": "Count of container crane",
+      "type": "integer",
+      "default": 1
+    },
+    "countOfDryCrane": {
+      "description": "Count of dry crane",
+      "type": "integer",
+      "default": 1
+    },
+    "modelingPeriod": {
+      "description": "Period of modeling in days",
+      "type": "integer",
+      "default": 30
+    },
+    "cranePrice": {
+      "description": "Price of crane in dollars",
+      "type": "integer",
+      "default": 30000
+    }
+  },
+  "required": ["arrivingDate", "name", "cargoType", "weight", "waitingDays", "capacityContainerUnitPerDay", "capacityDryKgPerDay", "capacityLiquidKgPerDay"]
+}

@@ -1,5 +1,5 @@
 public class Config {
-    public static long capacityLiquidKgPerDay = 30000;
-    public static long capacityDryKgPerDay = 60000;
-    public static long capacityContainerUnitPerDay = 50;
+    public static long capacityLiquidKgPerHour = 300;
+    public static long capacityDryKgPerHour = 600;
+    public static long capacityContainerUnitPerHour = 2;
 }
