@@ -2,9 +2,7 @@
 
 
 import java.lang.reflect.Array;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
@@ -62,7 +60,11 @@ class ShipInfo {
     }
 
     public void addLag(int rangeDays){
-        LocalDate date = LocalDate.parse(arrivingDate);
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+                        .withLocale(Locale.UK)
+                        .withZone(ZoneId.of("UTC+0"));
+        LocalDateTime date = LocalDateTime.parse(arrivingDate, formatter.ofPattern("d MMM yyyy, HH:mm:ss", Locale.UK));
         Random rnd = new Random();
         if(rnd.nextInt(100) < Config.possibilityOfShipLags ){
             //Ship will lag
@@ -72,11 +74,8 @@ class ShipInfo {
                 date = date.plusDays(rnd.nextInt(rangeDays));
             }
         }
-        Instant in = date.atStartOfDay(ZoneId.of("UTC+0")).toInstant();
-        DateTimeFormatter formatter =
-                DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
-                        .withLocale(Locale.UK)
-                        .withZone(ZoneId.of("UTC+0"));
+        Instant in = date.toInstant(ZoneOffset.UTC);
+
         arrivingDate = formatter.format(in);
     }
 
@@ -197,3 +196,18 @@ public class ScheduleGenerator {
         return hours;
     }
 }
+
+
+
+
+//    Arriving date: 3 Mar 2021, 17:47:52
+//        Name: 7VuPcB4iFx
+//        Weight (kg): 61173
+//        Cargo type: DRY
+//        Waiting days: 102
+//
+//        Arriving date: 5 Mar 2021, 00:00:00
+//        Name: 7VuPcB4iFx
+//        Weight (kg): 61173
+//        Cargo type: DRY
+//        Waiting days: 102

@@ -9,19 +9,21 @@ public class Program {
         //start date
         //end date
 
-//
-//        ScheduleGenerator gnr = new ScheduleGenerator(
-//                Config.capacityContainerUnitPerHour,
-//                Config.capacityDryKgPerHour,
-//                Config.capacityLiquidKgPerHour,
-//                "2021-03-01");
-//
-//        //gnr.generate().print();
-//
-//        String json = new JsonGeneratorAndPrinter().generateSchedule(12);
+
+        String json = new JsonGeneratorAndPrinter().generateSchedule(12);
+
+
+
 //        System.out.println(json);
 //
-//        Schedule sc = new Gson().fromJson(json, Schedule.class);
+        Schedule sc = new Gson().fromJson(json, Schedule.class);
+        sc.print();
+        System.out.println("========================================");
+
+        DockModel dm = new DockModel();
+
+        dm.startModel(sc, "");
+
 //
 //        sc.print();
 
