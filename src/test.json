@@ -1,0 +1,88 @@
+{
+  "Ships": [
+    {
+      "arrivingDate": "2 Apr 2021, 17:22:41",
+      "name": "9o3UBkG6qE",
+      "weight": 76,
+      "cargoType": "CONTAINER",
+      "waitingDays": 38
+    },
+    {
+      "arrivingDate": "16 Mar 2021, 04:00:09",
+      "name": "NYHnI1HA5h",
+      "weight": 68651,
+      "cargoType": "LIQUID",
+      "waitingDays": 229
+    },
+    {
+      "arrivingDate": "7 Apr 2021, 14:00:17",
+      "name": "m8mYt4HsBh",
+      "weight": 826,
+      "cargoType": "CONTAINER",
+      "waitingDays": 413
+    },
+    {
+      "arrivingDate": "10 Mar 2021, 07:49:53",
+      "name": "vivzF0XpiZ",
+      "weight": 466,
+      "cargoType": "CONTAINER",
+      "waitingDays": 233
+    },
+    {
+      "arrivingDate": "27 Mar 2021, 04:56:27",
+      "name": "vASooXhTf9",
+      "weight": 703,
+      "cargoType": "CONTAINER",
+      "waitingDays": 352
+    },
+    {
+      "arrivingDate": "5 Mar 2021, 21:02:55",
+      "name": "rMOND5QYuu",
+      "weight": 70424,
+      "cargoType": "DRY",
+      "waitingDays": 118
+    },
+    {
+      "arrivingDate": "14 Mar 2021, 18:24:36",
+      "name": "WDOU6xiyLk",
+      "weight": 63282,
+      "cargoType": "LIQUID",
+      "waitingDays": 211
+    },
+    {
+      "arrivingDate": "6 Mar 2021, 16:00:32",
+      "name": "2PAwB6Q8KF",
+      "weight": 89475,
+      "cargoType": "DRY",
+      "waitingDays": 150
+    },
+    {
+      "arrivingDate": "14 Apr 2021, 07:37:02",
+      "name": "qm0Ns0K6Xs",
+      "weight": 9509,
+      "cargoType": "DRY",
+      "waitingDays": 16
+    },
+    {
+      "arrivingDate": "9 Apr 2021, 14:43:01",
+      "name": "Jz0FKNoRSh",
+      "weight": 23043,
+      "cargoType": "DRY",
+      "waitingDays": 39
+    },
+    {
+      "arrivingDate": "8 Apr 2021, 02:15:31",
+      "name": "26f4VY0E0g",
+      "weight": 203,
+      "cargoType": "CONTAINER",
+      "waitingDays": 102
+    },
+    {
+      "arrivingDate": "31 Mar 2021, 08:46:44",
+      "name": "VBOd9UDfxX",
+      "weight": 28597,
+      "cargoType": "LIQUID",
+      "waitingDays": 96
+    }
+  ]
+}

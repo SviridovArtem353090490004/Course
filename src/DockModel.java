@@ -31,12 +31,20 @@ public class DockModel {
     final int penaltyChargePerHour = 100;
     final int liftCost = 30000;
 
+//    private Schedule shuffleDates(Schedule sc){
+//        for(int i = 0; i < sc.ships.size(); i++){
+//            sc.ships.get(i).
+//        }
+//        return sc;
+//    }
 
-    public String startModel(Schedule sc, Instant startDate){
+
+    public Report startModel(Schedule sc, String startDate){
 
 
 
-        return "";
+
+        return null;
     }
 
 }

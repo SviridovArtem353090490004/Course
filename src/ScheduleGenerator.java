@@ -1,15 +1,16 @@
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonValue;
 
+import java.lang.reflect.Array;
 import java.time.Instant;
-import java.util.Random;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.Arrays;
-import java.util.List;
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+
 enum CargoType {
     LIQUID("Liquid"),
     CONTAINER("Container"),
@@ -25,7 +26,7 @@ enum CargoType {
         this.displayName = s;
     }
 
-    public static CargoType random()  {
+    public static CargoType random() {
         return VALUES.get(RANDOM.nextInt(SIZE));
     }
 
@@ -35,24 +36,48 @@ enum CargoType {
 }
 
 
-class Schedule {
-    private Instant arrivingDate;
+class ShipInfo {
+    private String arrivingDate;
     private String name;
     private long weight;
     private CargoType cargoType;
     private long waitingDays;
 
-    public Schedule(Instant arrivingDate, String name, long weight,
+
+    public ShipInfo(Instant arrivingDate, String name, long weight,
                     CargoType cargoType, long waitingDays) {
-        this.arrivingDate = arrivingDate;
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+                        .withLocale(Locale.UK)
+                        .withZone(ZoneId.of("UTC+0"));
+        this.arrivingDate = formatter.format(arrivingDate);
         this.name = name;
         this.weight = weight;
         this.cargoType = cargoType;
         this.waitingDays = waitingDays;
     }
 
-    public Instant getArrivingDate() {
+    public String getArrivingDate() {
         return arrivingDate;
+    }
+
+    public void addLag(int rangeDays){
+        LocalDate date = LocalDate.parse(arrivingDate);
+        Random rnd = new Random();
+        if(rnd.nextInt(100) < Config.possibilityOfShipLags ){
+            //Ship will lag
+            if(rnd.nextInt(2) == 0){
+                date = date.minusDays(rnd.nextInt(rangeDays));
+            }else{
+                date = date.plusDays(rnd.nextInt(rangeDays));
+            }
+        }
+        Instant in = date.atStartOfDay(ZoneId.of("UTC+0")).toInstant();
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+                        .withLocale(Locale.UK)
+                        .withZone(ZoneId.of("UTC+0"));
+        arrivingDate = formatter.format(in);
     }
 
     public String getName() {
@@ -67,19 +92,18 @@ class Schedule {
         return waitingDays;
     }
 
-    public void print(){
+    public void print() {
         System.out.println("Arriving date: " + arrivingDate);
         System.out.println("Name: " + name);
-        if(cargoType != CargoType.CONTAINER) {
+        if (cargoType != CargoType.CONTAINER) {
             System.out.println("Weight (kg): " + weight);
-        }else{
+        } else {
             System.out.println("Units (pcs): " + weight);
         }
         System.out.println("Cargo type: " + cargoType.name());
         System.out.println("Waiting days: " + waitingDays);
     }
 }
-
 
 
 //Service 1
@@ -115,9 +139,9 @@ public class ScheduleGenerator {
                 .toString();
     }
 
-    public ScheduleGenerator(long capacityContainerUnitPerHour, long capacityDryKgPerHour, long capacityLiquidKgPerHour){
-        String startDateStr="2000-01-01T00:00:00.000Z";
-        startInclusive = Instant.parse(startDateStr);
+    public ScheduleGenerator(long capacityContainerUnitPerHour, long capacityDryKgPerHour, long capacityLiquidKgPerHour, String startDate) {
+
+        startInclusive = LocalDate.parse(startDate).atStartOfDay(ZoneId.of("UTC+0")).toInstant();
         endExclusive = Instant.now();
 
         this.capacityContainerUnitPerHour = capacityContainerUnitPerHour;
@@ -126,20 +150,20 @@ public class ScheduleGenerator {
 
     }
 
-    public Schedule generate(){
+    public ShipInfo generateShipInfo() {
         ThreadLocalRandom rnd = ThreadLocalRandom.current();
         Instant arriving_date = between(startInclusive);
         CargoType type = CargoType.random();
         long weightKg;
-        if(type == CargoType.CONTAINER) {
+        if (type == CargoType.CONTAINER) {
             weightKg = rnd.nextLong(10, 1000);
-        }else{
+        } else {
             weightKg = rnd.nextLong(100, 100000);
         }
 
         long days = getHours(type, weightKg);
 
-        return new Schedule(
+        return new ShipInfo(
                 arriving_date,
                 getRandomString(),
                 weightKg,
@@ -150,20 +174,18 @@ public class ScheduleGenerator {
 
     private long getHours(CargoType type, long weight) {
         long hours = -1;
-        if(type == CargoType.DRY) {
+        if (type == CargoType.DRY) {
             hours = weight / capacityDryKgPerHour;
-            if(weight % capacityDryKgPerHour != 0){
+            if (weight % capacityDryKgPerHour != 0) {
                 hours++;
             }
-        }
-        else {
+        } else {
             if (type == CargoType.LIQUID) {
                 hours = weight / capacityLiquidKgPerHour;
                 if (weight % capacityLiquidKgPerHour != 0) {
                     hours++;
                 }
-            }
-            else {
+            } else {
                 if (type == CargoType.CONTAINER) {
                     hours = weight / capacityContainerUnitPerHour;
                     if (weight % capacityContainerUnitPerHour != 0) {
