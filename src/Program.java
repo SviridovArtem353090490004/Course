@@ -1,31 +1,21 @@
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.Random;
 
 public class Program {
-    public static void main(String[] args) {
-
-        //start date
-        //end date
+    public static void main(String[] args) throws InterruptedException {
 
 
-        String json = new JsonGeneratorAndPrinter().generateSchedule(12);
+        String json = new JsonGeneratorAndPrinter().generateSchedule(102, "2021-04-02");
 
-
-
-//        System.out.println(json);
-//
         Schedule sc = new Gson().fromJson(json, Schedule.class);
-        sc.print();
-        System.out.println("========================================");
 
         DockModel dm = new DockModel();
 
-        dm.startModel(sc, "");
-
-//
-//        sc.print();
+        dm.startModel(sc, LocalDateTime.of(2021, Month.APRIL, 2, 1, 1,1 ));
 
     }
 }

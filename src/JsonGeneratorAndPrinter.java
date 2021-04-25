@@ -14,14 +14,14 @@ public class JsonGeneratorAndPrinter {
         return new Gson().toJson(sc);
     }
 
-    public String generateSchedule(int count) {
+    public String generateSchedule(int count, String startDate) {
         Schedule sc = new Schedule();
 
         ScheduleGenerator gnr = new ScheduleGenerator(
                 Config.capacityContainerUnitPerHour,
                 Config.capacityDryKgPerHour,
                 Config.capacityLiquidKgPerHour,
-                "2021-03-01");
+                startDate);
 
         for (int i = 0; i < count; i++) {
             sc.addShip(gnr.generateShipInfo());

@@ -1,7 +1,6 @@
 
 
 
-import java.lang.reflect.Array;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -39,11 +38,13 @@ class ShipInfo {
     private String name;
     private long weight;
     private CargoType cargoType;
-    private long waitingDays;
+    private long uploadHours;
+    private long uploadLag;
+    public final String dateFormat = "d MMM yyyy, HH:mm:ss";
 
 
     public ShipInfo(Instant arrivingDate, String name, long weight,
-                    CargoType cargoType, long waitingDays) {
+                    CargoType cargoType, long uploadHours) {
         DateTimeFormatter formatter =
                 DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
                         .withLocale(Locale.UK)
@@ -52,7 +53,8 @@ class ShipInfo {
         this.name = name;
         this.weight = weight;
         this.cargoType = cargoType;
-        this.waitingDays = waitingDays;
+        this.uploadHours = uploadHours;
+        this.uploadLag = 0;
     }
 
     public String getArrivingDate() {
@@ -64,7 +66,7 @@ class ShipInfo {
                 DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
                         .withLocale(Locale.UK)
                         .withZone(ZoneId.of("UTC+0"));
-        LocalDateTime date = LocalDateTime.parse(arrivingDate, formatter.ofPattern("d MMM yyyy, HH:mm:ss", Locale.UK));
+        LocalDateTime date = LocalDateTime.parse(arrivingDate, formatter.ofPattern(this.dateFormat, Locale.UK));
         Random rnd = new Random();
         if(rnd.nextInt(100) < Config.possibilityOfShipLags ){
             //Ship will lag
@@ -77,6 +79,13 @@ class ShipInfo {
         Instant in = date.toInstant(ZoneOffset.UTC);
 
         arrivingDate = formatter.format(in);
+
+        if(rnd.nextInt(100) < Config.possibilityOfUploadLags){
+            //Ship will lag on unload
+            this.uploadLag = rnd.nextInt(1440);
+        }
+
+
     }
 
     public String getName() {
@@ -87,8 +96,16 @@ class ShipInfo {
         return weight;
     }
 
-    public long getWaitingDays() {
-        return waitingDays;
+    public long getUploadHours() {
+        return uploadHours;
+    }
+
+    public CargoType getCargoType() {
+        return cargoType;
+    }
+
+    public long getUploadLag() {
+        return uploadLag;
     }
 
     public void print() {
@@ -100,7 +117,7 @@ class ShipInfo {
             System.out.println("Units (pcs): " + weight);
         }
         System.out.println("Cargo type: " + cargoType.name());
-        System.out.println("Waiting days: " + waitingDays);
+        System.out.println("Waiting days: " + uploadHours);
     }
 }
 
