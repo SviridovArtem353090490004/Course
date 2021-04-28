@@ -5,6 +5,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -41,7 +42,7 @@ class ShipInfo {
     private long uploadHours;
     private long uploadLag;
     public final String dateFormat = "d MMM yyyy, HH:mm:ss";
-
+    public transient final Semaphore uploadCount = new Semaphore(2);
 
     public ShipInfo(Instant arrivingDate, String name, long weight,
                     CargoType cargoType, long uploadHours) {
