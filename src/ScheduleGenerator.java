@@ -36,12 +36,16 @@ enum CargoType {
 
 class ShipInfo {
     private String arrivingDate;
-    private String name;
+    public String name;
     private long weight;
-    private CargoType cargoType;
+    public CargoType cargoType;
     private long uploadHours;
     private long uploadLag;
     public final String dateFormat = "d MMM yyyy, HH:mm:ss";
+    public LocalDateTime startUnload;
+    public LocalDateTime endUnload;
+    public LocalDateTime enterQueue;
+    public long penalty;
     public transient final Semaphore uploadCount = new Semaphore(2);
 
     public ShipInfo(Instant arrivingDate, String name, long weight,
@@ -56,6 +60,10 @@ class ShipInfo {
         this.cargoType = cargoType;
         this.uploadHours = uploadHours;
         this.uploadLag = 0;
+
+        this.penalty = 0;
+        startUnload = endUnload = null;
+        this.enterQueue = LocalDateTime.parse(this.arrivingDate, formatter.ofPattern(this.dateFormat, Locale.UK));
     }
 
     public String getArrivingDate() {
@@ -83,7 +91,7 @@ class ShipInfo {
 
         if(rnd.nextInt(100) < Config.possibilityOfUploadLags){
             //Ship will lag on unload
-            this.uploadLag = rnd.nextInt(1440);
+            this.uploadLag = rnd.nextInt(1440/60);
         }
 
 
@@ -173,9 +181,9 @@ public class ScheduleGenerator {
         CargoType type = CargoType.random();
         long weightKg;
         if (type == CargoType.CONTAINER) {
-            weightKg = rnd.nextLong(10, 1000);
+            weightKg = rnd.nextLong(20, 100);
         } else {
-            weightKg = rnd.nextLong(100, 100000);
+            weightKg = rnd.nextLong(10, 3000);
         }
 
         long days = getHours(type, weightKg);
