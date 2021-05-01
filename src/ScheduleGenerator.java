@@ -39,7 +39,7 @@ class ShipInfo {
     public String name;
     private long weight;
     public CargoType cargoType;
-    private long uploadHours;
+    private long expectedUnloadHours;
     private long uploadLag;
     public final String dateFormat = "d MMM yyyy, HH:mm:ss";
     public LocalDateTime startUnload;
@@ -49,7 +49,7 @@ class ShipInfo {
     public transient final Semaphore uploadCount = new Semaphore(2);
 
     public ShipInfo(Instant arrivingDate, String name, long weight,
-                    CargoType cargoType, long uploadHours) {
+                    CargoType cargoType, long expectedUnloadHours) {
         DateTimeFormatter formatter =
                 DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
                         .withLocale(Locale.UK)
@@ -58,12 +58,12 @@ class ShipInfo {
         this.name = name;
         this.weight = weight;
         this.cargoType = cargoType;
-        this.uploadHours = uploadHours;
+        this.expectedUnloadHours = expectedUnloadHours;
         this.uploadLag = 0;
 
         this.penalty = 0;
         startUnload = endUnload = null;
-        this.enterQueue = LocalDateTime.parse(this.arrivingDate, formatter.ofPattern(this.dateFormat, Locale.UK));
+
     }
 
     public String getArrivingDate() {
@@ -88,7 +88,7 @@ class ShipInfo {
         Instant in = date.toInstant(ZoneOffset.UTC);
 
         arrivingDate = formatter.format(in);
-
+        this.enterQueue = LocalDateTime.parse(this.arrivingDate, formatter.ofPattern(this.dateFormat, Locale.UK));
         if(rnd.nextInt(100) < Config.possibilityOfUploadLags){
             //Ship will lag on unload
             this.uploadLag = rnd.nextInt(1440/60);
@@ -105,8 +105,8 @@ class ShipInfo {
         return weight;
     }
 
-    public long getUploadHours() {
-        return uploadHours;
+    public long getExpectedUnloadHours() {
+        return expectedUnloadHours;
     }
 
     public CargoType getCargoType() {
@@ -126,7 +126,7 @@ class ShipInfo {
             System.out.println("Units (pcs): " + weight);
         }
         System.out.println("Cargo type: " + cargoType.name());
-        System.out.println("Waiting days: " + uploadHours);
+        System.out.println("Waiting days: " + expectedUnloadHours);
     }
 }
 
